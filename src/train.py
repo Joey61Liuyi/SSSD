@@ -12,7 +12,6 @@ from imputers.DiffWaveImputer import DiffWaveImputer
 from imputers.SSSDSAImputer import SSSDSAImputer
 from imputers.SSSDS4Imputer import SSSDS4Imputer
 
-
 def train(output_directory,
           ckpt_iter,
           n_iters,
@@ -105,6 +104,8 @@ def train(output_directory,
         
 
     training_data = np.load(trainset_config['train_data_path'])
+    n = len(training_data)%160
+    training_data = training_data[n:]
     training_data = np.split(training_data, 160, 0)
     training_data = np.array(training_data)
     training_data = torch.from_numpy(training_data).float().cuda()
@@ -156,8 +157,7 @@ def train(output_directory,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', type=str, default='config/SSSDS4.json',
-                        help='JSON file for configuration')
+    parser.add_argument('-c', '--config', type=str, default='./config/config_SSSDS4_PTB.json', help='JSON file for configuration')
 
     args = parser.parse_args()
 
