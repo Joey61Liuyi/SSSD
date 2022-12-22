@@ -150,7 +150,7 @@ def reformat_data_ptb(datafiles, target_fs=200, channels=12, channel_stoi=channe
         sex = metadata[1]
         label_sex = _sex_to_categorical(sex)
 
-        row={"data":filename_out_relative,"dataset":"PTB-XL","channels_available":channels_available,"patient":"PTB_"+patient, "ecg": "PTB_"+ecg, "age": age, "label_age":label_age,"sex": sex, "label_sex": label_sex, "ecg_date":metadata[2], "diagnosis":diagnosis1, "infarction_localization":metadata[5], "diagnosis2": diagnosis2, "diagnosis12": diagnosis12,"smoker": smoker, "label_smoker":label_smoker, "infarction_date":metadata[10], "catheterization_date":metadata[14]}
+        row={"data":filename_out_relative,"dataset":"PTB_bk-XL","channels_available":channels_available,"patient":"PTB_"+patient, "ecg": "PTB_"+ecg, "age": age, "label_age":label_age,"sex": sex, "label_sex": label_sex, "ecg_date":metadata[2], "diagnosis":diagnosis1, "infarction_localization":metadata[5], "diagnosis2": diagnosis2, "diagnosis12": diagnosis12,"smoker": smoker, "label_smoker":label_smoker, "infarction_date":metadata[10], "catheterization_date":metadata[14]}
         #add hemodynamics
         for i in range(14,36):
             row[metadata_descr[i]]=metadata[i]
@@ -703,7 +703,7 @@ def prepare_data_thew(data_folder, max_length_seconds=0, target_folder=None, cha
 # Cell
 def prepare_data_cinc(data_path, min_cnt=10, datasets=None, target_fs=100, strat_folds=10, channels=12, channel_stoi=channel_stoi_default, target_folder=None, recreate_data=True):
     '''unzip archives into separate folders with dataset names from above
-    use datasets e.g. ["ICBEB2018","ICBEB2018_2","INCART","PTB-XL","PTB-XL-XL","Georgia"] to filter particular datasets (None for all)
+    use datasets e.g. ["ICBEB2018","ICBEB2018_2","INCART","PTB_bk-XL","PTB_bk-XL-XL","Georgia"] to filter particular datasets (None for all)
     '''
     target_root = Path(".") if target_folder is None else target_folder
     target_root.mkdir(parents=True, exist_ok=True)

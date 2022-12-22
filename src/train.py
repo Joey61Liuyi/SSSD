@@ -1,6 +1,8 @@
 import os
 import argparse
 import json
+import time
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -96,17 +98,15 @@ def train(output_directory,
         ckpt_iter = -1
         print('No valid checkpoint model found, start training from initialization.')
 
-        
-        
-    
     ### Custom data loading and reshaping ###
-        
-        
 
     training_data = np.load(trainset_config['train_data_path'])
-    n = len(training_data)%160
+    training_data = training_data.transpose(0,2,1)
+    batch_size = 50
+    n = len(training_data)%batch_size
     training_data = training_data[n:]
-    training_data = np.split(training_data, 160, 0)
+    batch_num = len(training_data)//batch_size
+    training_data = np.split(training_data, batch_num, 0)
     training_data = np.array(training_data)
     training_data = torch.from_numpy(training_data).float().cuda()
     print('Data loaded')
@@ -115,6 +115,8 @@ def train(output_directory,
     
     # training
     n_iter = ckpt_iter + 1
+    time_now = time.time()
+
     while n_iter < n_iters + 1:
         for batch in training_data:
 
@@ -141,8 +143,10 @@ def train(output_directory,
             loss.backward()
             optimizer.step()
 
+
             if n_iter % iters_per_logging == 0:
-                print("iteration: {} \tloss: {}".format(n_iter, loss.item()))
+                print("iteration: {} \tloss: {}, iteration time: {:.2f}s".format(n_iter, loss.item(), time.time()-time_now))
+                time_now = time.time()
 
             # save checkpoint
             if n_iter > 0 and n_iter % iters_per_ckpt == 0:
@@ -151,9 +155,7 @@ def train(output_directory,
                             'optimizer_state_dict': optimizer.state_dict()},
                            os.path.join(output_directory, checkpoint_name))
                 print('model at iteration %s is saved' % n_iter)
-
             n_iter += 1
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -188,3 +190,4 @@ if __name__ == "__main__":
         model_config = config['wavenet_config']
 
     train(**train_config)
+    os.system('reboot')
