@@ -72,26 +72,39 @@ def generate(output_directory,
 
     
     # load checkpoint
-    ckpt_path = os.path.join(ckpt_path, local_path)
-    if ckpt_iter == 'max':
-        ckpt_iter = find_max_epoch(ckpt_path)
-    model_path = os.path.join(ckpt_path, '{}.pkl'.format(ckpt_iter))
-    try:
-        checkpoint = torch.load(model_path, map_location='cpu')
-        net.load_state_dict(checkpoint['model_state_dict'])
-        print('Successfully loaded model at iteration {}'.format(ckpt_iter))
-    except:
-        raise Exception('No valid model found')
+    # ckpt_path = os.path.join(ckpt_path, local_path)
+    # if ckpt_iter == 'max':
+    #     ckpt_iter = find_max_epoch(ckpt_path)
+    # model_path = os.path.join(ckpt_path, '{}.pkl'.format(ckpt_iter))
+    # try:
+    #     checkpoint = torch.load(model_path, map_location='cpu')
+    #     net.load_state_dict(checkpoint['model_state_dict'])
+    #     print('Successfully loaded model at iteration {}'.format(ckpt_iter))
+    # except:
+    #     raise Exception('No valid model found')
 
         
         
     ### Custom data loading and reshaping ###
     
     testing_data = np.load(trainset_config['test_data_path'])
-    testing_data = np.split(testing_data, 4, 0)
+    # testing_data = np.split(testing_data, 4, 0)
+    # testing_data = np.array(testing_data)
+    # testing_data = torch.from_numpy(testing_data).float().cuda()
+    # print('Data loaded')
+
+
+    testing_data = testing_data.transpose(0,2,1)
+    batch_size = 50
+    n = len(testing_data)%batch_size
+    testing_data = testing_data[n:]
+    batch_num = len(testing_data)//batch_size
+    testing_data = np.split(testing_data, batch_num, 0)
     testing_data = np.array(testing_data)
     testing_data = torch.from_numpy(testing_data).float().cuda()
     print('Data loaded')
+
+
 
     all_mse = []
 
@@ -167,11 +180,11 @@ def generate(output_directory,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', type=str, default='config/config_SSSDS4.json',
+    parser.add_argument('-c', '--config', type=str, default='./config/config_SSSDS4_PTB.json',
                         help='JSON file for configuration')
-    parser.add_argument('-ckpt_iter', '--ckpt_iter', default=40000,
+    parser.add_argument('-ckpt_iter', '--ckpt_iter', default='max',
                         help='Which checkpoint to use; assign a number or "max"')
-    parser.add_argument('-n', '--num_samples', type=int, default=500,
+    parser.add_argument('-n', '--num_samples', type=int, default=50,
                         help='Number of utterances to be generated')
     args = parser.parse_args()
 

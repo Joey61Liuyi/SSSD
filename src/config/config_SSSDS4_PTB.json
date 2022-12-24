@@ -13,7 +13,7 @@
         "diffusion_step_embed_dim_in": 128,
         "diffusion_step_embed_dim_mid": 512,
         "diffusion_step_embed_dim_out": 512,
-        "s4_lmax": 100,
+        "s4_lmax": 248,
         "s4_d_state":64,
         "s4_dropout":0.0,
         "s4_bidirectional":1,
@@ -34,7 +34,7 @@
     "trainset_config":{
         "train_data_path": "./datasets/PTB-XL/train_ptbxl_248.npy",
         "test_data_path": "./datasets/PTB-XL/test_ptbxl_248.npy",
-        "segment_length":100,
+        "segment_length":248,
         "sampling_rate": 100
     },
     "gen_config":{
