@@ -101,18 +101,20 @@ def train(output_directory,
     ### Custom data loading and reshaping ###
 
     training_data = np.load(trainset_config['train_data_path'])
-    training_data = training_data.transpose(0,2,1)
-    batch_size = 50
-    n = len(training_data)%batch_size
-    training_data = training_data[n:]
-    batch_num = len(training_data)//batch_size
-    training_data = np.split(training_data, batch_num, 0)
+    # training_data = training_data.transpose(0,2,1)
+    # batch_size = 10
+    # n = len(training_data)%batch_size
+    # training_data = training_data[n:]
+    # batch_num = len(training_data)//batch_size
+    # training_data = np.split(training_data, batch_num, 0)
+    # training_data = np.array(training_data)
+
+    # batch_size = 5
+    training_data = np.split(training_data, 2, 0)
     training_data = np.array(training_data)
     training_data = torch.from_numpy(training_data).float().cuda()
     print('Data loaded')
 
-    
-    
     # training
     n_iter = ckpt_iter + 1
     time_now = time.time()
@@ -159,7 +161,7 @@ def train(output_directory,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', type=str, default='./config/config_SSSDS4_PTB.json', help='JSON file for configuration')
+    parser.add_argument('-c', '--config', type=str, default='./config/config_SSSDS4_stock.json', help='JSON file for configuration')
 
     args = parser.parse_args()
 
