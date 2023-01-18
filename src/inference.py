@@ -72,16 +72,16 @@ def generate(output_directory,
 
     
     # load checkpoint
-    # ckpt_path = os.path.join(ckpt_path, local_path)
-    # if ckpt_iter == 'max':
-    #     ckpt_iter = find_max_epoch(ckpt_path)
-    # model_path = os.path.join(ckpt_path, '{}.pkl'.format(ckpt_iter))
-    # try:
-    #     checkpoint = torch.load(model_path, map_location='cpu')
-    #     net.load_state_dict(checkpoint['model_state_dict'])
-    #     print('Successfully loaded model at iteration {}'.format(ckpt_iter))
-    # except:
-    #     raise Exception('No valid model found')
+    ckpt_path = os.path.join(ckpt_path, local_path)
+    if ckpt_iter == 'max':
+        ckpt_iter = find_max_epoch(ckpt_path)
+    model_path = os.path.join(ckpt_path, '{}.pkl'.format(ckpt_iter))
+    try:
+        checkpoint = torch.load(model_path, map_location='cpu')
+        net.load_state_dict(checkpoint['model_state_dict'])
+        print('Successfully loaded model at iteration {}'.format(ckpt_iter))
+    except:
+        raise Exception('No valid model found')
 
         
         
@@ -94,13 +94,15 @@ def generate(output_directory,
     # print('Data loaded')
 
 
-    testing_data = testing_data.transpose(0,2,1)
-    batch_size = 50
-    n = len(testing_data)%batch_size
-    testing_data = testing_data[n:]
-    batch_num = len(testing_data)//batch_size
-    testing_data = np.split(testing_data, batch_num, 0)
-    testing_data = np.array(testing_data)
+    # testing_data = testing_data.transpose(0,2,1)
+    # batch_size = 50
+    # n = len(testing_data)%batch_size
+    # testing_data = testing_data[n:]
+    # batch_num = len(testing_data)//batch_size
+    # testing_data = np.split(testing_data, batch_num, 0)
+    testing_data = np.array([testing_data])
+
+
     testing_data = torch.from_numpy(testing_data).float().cuda()
     print('Data loaded')
 
@@ -180,11 +182,11 @@ def generate(output_directory,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', type=str, default='./config/config_SSSDS4_PTB.json',
+    parser.add_argument('-c', '--config', type=str, default='./config/config_SSSDS4_stock.json',
                         help='JSON file for configuration')
     parser.add_argument('-ckpt_iter', '--ckpt_iter', default='max',
                         help='Which checkpoint to use; assign a number or "max"')
-    parser.add_argument('-n', '--num_samples', type=int, default=50,
+    parser.add_argument('-n', '--num_samples', type=int, default=1,
                         help='Number of utterances to be generated')
     args = parser.parse_args()
 

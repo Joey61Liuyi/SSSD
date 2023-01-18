@@ -20,9 +20,9 @@
         "s4_layernorm":1
     },
     "train_config": {
-        "output_directory": "./results/PTB",
+        "output_directory": "./results/stock",
         "ckpt_iter": "max",
-        "iters_per_ckpt": 10000,
+        "iters_per_ckpt": 30000,
         "iters_per_logging": 100,
         "n_iters": 150000,
         "learning_rate": 2e-4,
@@ -38,7 +38,7 @@
         "sampling_rate": 100
     },
     "gen_config":{
-        "output_directory": "./results/PTB/",
-        "ckpt_path": "./results/PTB/"
+        "output_directory": "./results/stock/",
+        "ckpt_path": "./results/stock/"
     }
 }
